@@ -1,25 +1,25 @@
 export default class Session {
     static isAuth() {
-        return localStorage.getItem('AdminJWT') !== null;
+        return localStorage.getItem('SessionJWT') !== null;
     }
 
     static logout() {
-        localStorage.removeItem('AdminJWT');
+        localStorage.removeItem('SessionJWT');
     }
 
     static setJWT(jwt) {
-        localStorage.setItem('AdminJWT', jwt);
+        localStorage.setItem('SessionJWT', jwt);
     }
 
     static getJWT() {
-        return localStorage.getItem('AdminJWT');
+        return localStorage.getItem('SessionJWT');
     }
 
     static setUserId(userId) {
-        localStorage.setItem('AdminUserId', userId);
+        localStorage.setItem('SessionUserId', userId);
     }
 
     static getUserId() {
-        return localStorage.getItem('AdminUserId');
+        return localStorage.getItem('SessionUserId');
     }
 }

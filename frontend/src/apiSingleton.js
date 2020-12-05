@@ -1,4 +1,4 @@
-import apiFactory from './api';
+import apiFactory from './Api';
 import config from './Utils/Config';
 
 export default apiFactory({
