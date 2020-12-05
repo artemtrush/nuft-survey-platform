@@ -1,41 +1,7 @@
 import Session      from '../Module/Session';
-import api          from '../apiSingleton';
-import ErrorPage    from "../Page/Modal/Error";
 import routes       from '../Module/Routes';
-import Cache        from "./Cache";
-
-/* Content onload callbacks */
-
-let isContentLoaded = false;
-let contentCallbacks = [];
-function clearContentOnLoadCallbacks() {
-    contentCallbacks = [];
-}
-export function addContentOnLoadCallback(cb) {
-    if (!isContentLoaded) {
-        contentCallbacks.push(cb);
-    } else {
-        return cb();
-    }
-}
-export function startCollectingContentOnLoadCallbacks() {
-    isContentLoaded = false;
-    clearContentOnLoadCallbacks();
-}
-export function runContentOnLoadCallbacks() {
-    $.each(contentCallbacks, (idx, cb) => {
-        cb();
-    });
-    clearContentOnLoadCallbacks();
-    isContentLoaded = true;
-}
-
 
 /* Page routing */
-
-export function displayPage(page) {
-    page.display();
-}
 
 export function pathFor(routeName, params = {}) {
     let linkPath = '#';
@@ -57,28 +23,6 @@ export function pathFor(routeName, params = {}) {
     return linkPath;
 }
 
-export function linkForEntityShowPage(entityName, entityId, additionalText = '') {
-    if (!entityName || !entityId) {
-        return '';
-    }
-
-    const params = {
-        Id: entityId
-    };
-    let path = pathFor(entityName + '_show', params);
-    if (!path || path == '#') {
-        path = pathFor(entityName + '_update', params);
-    }
-
-    return `
-        <div class="show-page-link">
-            <a href="${path}">
-                ${entityId} ${additionalText}
-            </a>
-        </div>
-    `;
-}
-
 
 /* Page errors aborting */
 
@@ -96,70 +40,6 @@ export function abortAccessDenied() {
 
 export function abortNotFound() {
     return abortWithText('Объект не найден');
-}
-
-export async function loadStates() {
-    const userId = Session.getUserId();
-    if (userId) {
-        const response = await api.user.show(userId);
-        if (response.Status) {
-            Storage.set('User', response.User);
-            return true;
-        }
-    }
-
-    Session.logout();
-    return false;
-}
-
-
-/* Page events */
-
-export function resizeTables() {
-    $('.dataTables_wrapper .row > .col-sm-12 tbody').css('max-height', `${$(window).height() * 0.7}px`);
-}
-
-export function pinEvents() {
-    $(window).on('resize', () => {
-        resizeTables();
-    });
-}
-
-export async function getServerConfigValue(key) {
-    const cache = new Cache();
-    const cacheKey = 'config_' + key;
-
-    let value = cache.getItem(cacheKey);
-    if (value === false) {
-        const data = await api.config.show(key);
-        value = key in data ? data[ key ] : null;
-        if (value !== null) {
-            cache.setItem(cacheKey, value);
-        }
-    }
-
-    return value;
-}
-
-export async function executeAfterConfirmation(callback, confirmationType, confirmationEntityId = null) {
-    api.userConfirmationCode.create({
-        UserId: Storage.get('User').Id,
-        Type: confirmationType,
-        EntityId: confirmationEntityId
-    });
-
-    showConfirmModal(
-        `
-            <div class="text-center">
-                <p>Введите код подтверждения</p>
-                <input id="confirmation-code" type="text" maxlength="8" placeholder="00000000">
-            </div>
-        `,
-        () => {
-            const confirmationCode = $('#confirmation-code').val();
-            callback(confirmationCode ? confirmationCode : 'none');
-        }
-    );
 }
 
 
