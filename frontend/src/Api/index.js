@@ -12,17 +12,9 @@ import Users            from './Main/Users';
 import AdminSurveys          from './Admin/Surveys';
 import AdminTeachers         from './Admin/Surveys';
 
-export default function ({ apiPrefix } = {}) {
-    if (!apiPrefix) {
-        throw new Error('API prefix required');
-    }
-
+function mainApi(apiPrefix) {
     const apiClient = new ApiClient({
         prefix : apiPrefix
-    });
-
-    const adminApiClient = new ApiClient({
-        prefix : apiPrefix + '/admin'
     });
 
     return {
@@ -33,10 +25,30 @@ export default function ({ apiPrefix } = {}) {
         sessions            : new Sessions({ apiClient }),
         surveys             : new Surveys({ apiClient }),
         teachers            : new Teachers({ apiClient }),
-        users               : new Users({ apiClient }),
-        admin               : {
-            surveys         : new AdminSurveys({ adminApiClient }),
-            teachers        : new AdminTeachers({ adminApiClient })
+        users               : new Users({ apiClient })
+    };
+}
+
+function adminApi(apiPrefix) {
+    const apiClient = new ApiClient({
+        prefix : apiPrefix + '/admin'
+    });
+
+    return {
+        surveys             : new AdminSurveys({ apiClient }),
+        teachers            : new AdminTeachers({ apiClient })
+    };
+}
+
+export default function ({ apiPrefix } = {}) {
+    if (!apiPrefix) {
+        throw new Error('API prefix required');
+    }
+
+    return {
+        ...mainApi(apiPrefix),
+        admin : {
+            ...adminApi(apiPrefix)
         }
     };
 }

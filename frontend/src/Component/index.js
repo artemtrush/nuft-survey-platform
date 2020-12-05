@@ -1,8 +1,8 @@
-import { Input }        from './Input/Input.js';
+import Input                    from './Input/Input.js';
+import DefaultSidebar           from './DefaultSidebar/DefaultSidebar.js';
 
 
-export default function () {
-    return {
-        Input
-    };
-}
+export default {
+    Input,
+    DefaultSidebar
+};
