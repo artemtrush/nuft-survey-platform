@@ -1,0 +1,7 @@
+.idea/
+.DS_Store
+node_modules/
+public/assets/config.js
+public/assets/config.local
+public/build/
+npm-debug.log
