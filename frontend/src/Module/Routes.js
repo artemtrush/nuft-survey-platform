@@ -1,13 +1,15 @@
-import Entrance from '../Controller/Entrance';
+import Entrance             from '../Controller/Entrance';
+import Authorization        from '../Controller/Authorization';
+import Registration         from '../Controller/Registration';
 
 
 export default {
     /* Unauthorised */
     'entrance': { controller: Entrance, name: 'entrance' },
 
-    'authorization': { controller: Entrance, name: 'authorization' },
+    'authorization': { controller: Authorization, name: 'authorization' },
 
-    'registration': { controller: Entrance, name: 'registration' },
+    'registration': { controller: Registration, name: 'registration' },
     'registration/confirmation': { controller: Entrance, name: 'registration_confirmation' },
 
     'recovery': { controller: Entrance, name: 'recovery' },

@@ -22,7 +22,7 @@ export default class Main {
         window.dispatcher = new Dispatcher(routesHandlers);
         window.dispatcher.start();
 
-        if (!window.location.hash.match(/\#.*$/)) {
+        if (!window.location.hash.match(/\#.+$/)) {
             window.dispatcher.redirectToHash('entrance');
         } else {
             window.dispatcher.trigger();

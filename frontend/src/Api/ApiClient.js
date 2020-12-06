@@ -1,6 +1,5 @@
 import 'whatwg-fetch';
 
-import { abortAccessDenied } from '../Utils/Page';
 import queryString from 'query-string';
 import FormData from 'form-data';
 import Session from '../Module/Session';
@@ -64,7 +63,7 @@ export default class ApiClient {
             }
 
             if (data.error && data.error.type && data.error.type === 'ACCESS_DENIED') {
-                return abortAccessDenied();
+                // @REMOVE TODO ABORT ACCESS DENIED
             }
 
             return data;

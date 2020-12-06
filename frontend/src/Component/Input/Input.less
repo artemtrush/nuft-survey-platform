@@ -1,0 +1,65 @@
+.Input {
+    display: block;
+    width: 100%;
+    margin-bottom: 14px;
+    position: relative;
+
+    .input-title {
+        margin-bottom: 4px;
+        display: block;
+    }
+
+    input {
+        width: 100%;
+        height: 50px;
+
+        border-radius: 5px;
+        border: none;
+
+        outline: none !important;
+        background: #F2F2F2 !important;
+        box-shadow: none !important;
+
+        padding: 15px 20px;
+    }
+
+    input:-webkit-autofill::first-line {
+        font-size: 18px;
+        font-family: Roboto;
+    }
+
+    .password-toggle-button {
+        display: none;
+    }
+}
+
+.Input.password {
+    input {
+        padding-right: 50px;
+    }
+    input[type=password] {
+        padding-top: 19px;
+        font-size: 40px;
+    }
+    input[type=password]:-webkit-autofill::first-line {
+        font-size: 40px;
+    }
+
+    .password-toggle-button {
+        position: absolute;
+        right: 18px;
+        bottom: 13px;
+        display: block;
+        width: 22px;
+        height: 22px;
+        background-image: url(/static/images/password-input-hidden.png);
+        background-size: 22px auto;
+        background-repeat: no-repeat;
+        background-position: 50%;
+        cursor: pointer;
+        z-index: 100;
+    }
+    .password-toggle-button.visible {
+        background-image: url(/static/images/password-input-visible.png);
+    }
+}

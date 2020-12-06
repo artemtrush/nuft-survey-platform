@@ -119,7 +119,7 @@ export default class RoutesDispatcher {
             res = captures;
         } else {
             if (window.location.hash && window.location.hash !== '#') {
-                this.redirectToHash('#index');
+                this.redirectToHash('entrance');
             }
 
             res = null;
