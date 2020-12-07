@@ -1,16 +1,15 @@
 <?php
 
-namespace backend\modules\admin\controllers;
+namespace backend\modules\v1\controllers;
 
-use backend\modules\admin\models\Password;
-use backend\modules\admin\models\form\AdminSettingForm;
+use backend\models\Password;
 use Yii;
-use backend\modules\admin\models\AuthAdmin;
+use backend\modules\v1\models\AuthAdmin;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-class AdminController extends Controller
+class AdminDDDController extends Controller
 {
     public $layout = 'base';
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace backend\modules\admin\src\behavior;
+namespace backend\modules\v1\src\behavior;
 
-use backend\modules\admin\models\AuthAssignment;
+use backend\models\AuthAssignment;
 use yii\base\Behavior;
 use yii\db\ActiveRecord;
 

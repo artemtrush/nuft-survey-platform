@@ -1,12 +1,11 @@
 <?php
 
-namespace backend\modules\admin\models;
+namespace backend\models;
 
-use backend\modules\admin\src\behavior\AdminNotification;
-use backend\modules\admin\src\behavior\AuthRole;
-use backend\modules\bot\models\BotSetting;
+use backend\modules\v1\src\behavior\AdminNotification;
+use backend\modules\v1\src\behavior\AuthRole;
 use src\behavior\CapitalLetters;
-use src\behavior\Timestamp;
+use yii\behaviors\TimestampBehavior;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -21,8 +20,6 @@ use yii\helpers\ArrayHelper;
  * @property string $status
  * @property string $created_at
  * @property string $updated_at
- *
- * @property AdminSetting $settings[]
  */
 class AuthAdmin extends \yii\db\ActiveRecord
 {
@@ -41,7 +38,7 @@ class AuthAdmin extends \yii\db\ActiveRecord
                 'class' => AuthRole::className(),
             ],
             [
-                'class' => Timestamp::className(),
+                'class' => TimestampBehavior::className()
             ],
             [
                 'class' => CapitalLetters::className(),

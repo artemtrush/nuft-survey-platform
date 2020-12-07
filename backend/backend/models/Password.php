@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\modules\admin\models;
+namespace backend\models;
 
 use Yii;
 use yii\base\Model;
@@ -14,7 +14,7 @@ class Password extends Model
     public function rules()
     {
         return [
-            ['re_password', 'compare', 'compareAttribute' => 'password', 'message' => 'Пароль не подтвержден'],
+            ['re_password', 'compare', 'compareAttribute' => 'password', 'message' => 'Пароль не підтверджений'],
             [['password', 're_password'], 'string', 'min' => 6],
             [['password', 're_password', 'auth_key'], 'string', 'max' => 255],
             [['password', 're_password'], 'trim'],
@@ -37,7 +37,7 @@ class Password extends Model
     {
         return [
             'password' => 'Пароль',
-            're_password' => 'Повторить пароль',
+            're_password' => 'Повторити пароль',
         ];
     }
 }

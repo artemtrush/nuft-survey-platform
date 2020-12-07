@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\modules\admin\models;
+namespace backend\models;
 
 use Yii;
 
@@ -9,7 +9,7 @@ class AuthItem extends \yii\db\ActiveRecord
 {
     const ADMIN = 'admin';
     const DEVELOPER = 'dev';
-    const USER = 'user';
+    const TEACHER = 'teacher';
 
     public static function tableName()
     {
@@ -74,9 +74,8 @@ class AuthItem extends \yii\db\ActiveRecord
     public static function getRoles()
     {
         return [
-            self::ADMIN => 'Администратор',
-            self::DEVELOPER => 'Разработчик',
-            self::USER => 'Пользователь'
+            self::ADMIN => 'Адміністратор',
+            self::TEACHER => 'Викладач'
         ];
     }
 }

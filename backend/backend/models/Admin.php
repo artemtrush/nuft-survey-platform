@@ -1,12 +1,11 @@
 <?php
 
-namespace backend\modules\admin\models;
+namespace backend\models;
 
-use backend\modules\bot\models\Bot;
 use src\behavior\CapitalLetters;
-use src\behavior\Timestamp;
 use Yii;
 use yii\base\NotSupportedException;
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
@@ -33,7 +32,7 @@ class Admin extends ActiveRecord implements IdentityInterface
     {
         return [
             [
-                'class' => Timestamp::className(),
+                'class' => TimestampBehavior::className()
             ],
             [
                 'class' => CapitalLetters::className(),
@@ -145,10 +144,5 @@ class Admin extends ActiveRecord implements IdentityInterface
     public function getFullName()
     {
         return $this->name . ' ' . $this->surname;
-    }
-
-    public function getMyBot()
-    {
-        return Bot::findOne(['admin_id' => $this->id]);
     }
 }

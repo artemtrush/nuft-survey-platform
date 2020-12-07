@@ -2,19 +2,20 @@
 
 namespace backend\controllers;
 
-use yii\web\Controller;
-
+use yii\rest\Controller;
+use yii\web\Response;
 
 class ErrorController extends Controller
 {
-
-    public function actions()
+    public function actionError()
     {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
         return [
+            'status' => 0,
             'error' => [
-                'class' => 'yii\web\ErrorAction',
-                'layout' => 'base'
-            ],
+                'code' => 404,
+                'message' => 'Page not found'
+            ]
         ];
     }
 }
