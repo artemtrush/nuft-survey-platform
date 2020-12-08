@@ -1,4 +1,4 @@
-import { v4 as uuidv4 }     from 'uuid';
+// import { v4 as uuidv4 }     from 'uuid';
 
 import api                  from './../apiSingleton.js';
 import components           from './index';
@@ -29,7 +29,16 @@ export default class Base {
     }
 
     uuid() {
-        return uuidv4();
+        // @REMOVE USE LIB
+        if (!window.UUID) {
+            window.UUID = 0;
+        }
+
+        window.UUID += 1;
+
+        return `uuid-${window.UUID}`;
+
+        // return uuidv4();
     }
 
     async html() {
