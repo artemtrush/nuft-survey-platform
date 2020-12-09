@@ -29,7 +29,7 @@ class AdminController extends Controller
 
     public function actionTeacherList()
     {
-        return ['status' => 13];
+        return ['status' => 213];
     }
 
     public function actionTeacherItem($id)

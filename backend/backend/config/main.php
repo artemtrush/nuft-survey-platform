@@ -20,6 +20,7 @@ return [
             'class' => 'src\components\Common',
         ],
         'request' => [
+            'baseUrl' => '/api',
             'parsers' => [
                 'application/json' => 'yii\web\JsonParser',
             ]

@@ -20,6 +20,7 @@ use yii\helpers\ArrayHelper;
  * @property string $phone
  * @property string $email
  * @property string $status
+ * @property string $password
  * @property string $created_at
  * @property string $updated_at
  */
@@ -27,6 +28,7 @@ class AuthAdmin extends \yii\db\ActiveRecord
 {
     public $role;
     public $_password;
+    public $passwordRepeat;
 
     public static function tableName()
     {
@@ -42,13 +44,9 @@ class AuthAdmin extends \yii\db\ActiveRecord
             [
                 'class' => TimestampBehavior::className()
             ],
-            [
-                'class' => CapitalLetters::className(),
-                'fields' => ['surname', 'name'],
-            ],
-            [
-                'class' => AdminNotification::className(),
-            ],
+//            [
+//                'class' => AdminNotification::className(),
+//            ],
         ];
     }
 
@@ -58,7 +56,7 @@ class AuthAdmin extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'email', 'auth_key', 'password', 'role'], 'required'],
+            [['email', 'auth_key', 'password', '_password', 'passwordRepeat', 'role'], 'required'],
             [['surname', 'name', 'email'], 'trim'],
             [['status'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
@@ -67,7 +65,7 @@ class AuthAdmin extends \yii\db\ActiveRecord
             [['email', 'password', 'password_reset_token', '_password'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['email'], 'unique'],
-            [['phone'], 'unique'],
+            ['passwordRepeat', 'compare', 'compareAttribute' => '_password', 'message' => 'Паролі не збігаються'],
             [['password_reset_token'], 'unique'],
             ['status', 'in', 'range' => [Admin::STATUS_ACTIVE, Admin::STATUS_NOT_ACTIVE]],
         ];
@@ -79,13 +77,14 @@ class AuthAdmin extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' =>'ID',
-            'surname' => 'Фамилия',
-            'name' => 'Имя',
+            'id' => 'ID',
+            'surname' => 'Прізвище',
+            'name' => 'І\'мя',
             'phone' => 'Телефон',
             'email' => 'Email',
             'auth_key' => 'Auth Key',
             'password' => 'Пароль',
+            'passwordRepeat' => 'Повтор паролю',
             'status' => 'Статус',
             'created_at' => 'Дата создания',
             'updated_at' => 'Дата изменения',
@@ -106,8 +105,8 @@ class AuthAdmin extends \yii\db\ActiveRecord
     public static function statusesAll()
     {
         return [
-            Admin::STATUS_ACTIVE => 'Активен',
-            Admin::STATUS_NOT_ACTIVE => 'Не активен',
+            Admin::STATUS_ACTIVE => 'Активний',
+            Admin::STATUS_NOT_ACTIVE => 'Не активний',
         ];
     }
 
@@ -120,10 +119,10 @@ class AuthAdmin extends \yii\db\ActiveRecord
     {
         switch ($status) {
             case Admin::STATUS_ACTIVE:
-                $s = 'Активен';
+                $s = 'Активний';
                 break;
             case Admin::STATUS_NOT_ACTIVE:
-                $s = 'Не активен';
+                $s = 'Не активний';
                 break;
         }
         return $s;

@@ -3,6 +3,7 @@
 namespace backend\modules\v1\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "discipline".
@@ -26,6 +27,15 @@ class Discipline extends \yii\db\ActiveRecord
         return 'discipline';
     }
 
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className()
+            ],
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -33,6 +43,7 @@ class Discipline extends \yii\db\ActiveRecord
     {
         return [
             [['curriculum_id', 'updated_at', 'created_at'], 'integer'],
+            [['curriculum_id', 'name'], 'required'],
             [['name'], 'string', 'max' => 255],
             [['curriculum_id'], 'exist', 'skipOnError' => true, 'targetClass' => Curriculum::className(), 'targetAttribute' => ['curriculum_id' => 'id']],
         ];

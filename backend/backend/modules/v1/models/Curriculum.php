@@ -3,6 +3,7 @@
 namespace backend\modules\v1\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "curriculum".
@@ -27,6 +28,15 @@ class Curriculum extends \yii\db\ActiveRecord
         return 'curriculum';
     }
 
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className()
+            ],
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -34,6 +44,7 @@ class Curriculum extends \yii\db\ActiveRecord
     {
         return [
             [['updated_at', 'created_at'], 'integer'],
+            [['name', 'period'], 'required'],
             [['name', 'period'], 'string', 'max' => 255],
         ];
     }
@@ -80,5 +91,15 @@ class Curriculum extends \yii\db\ActiveRecord
     public function getSurveys()
     {
         return $this->hasMany(Survey::className(), ['curriculum_id' => 'id']);
+    }
+
+    public static function checkIsset($name, $period)
+    {
+        if ($name && $period) {
+            if (self::findOne(['name' => $name, 'period' => $period])) {
+                return true;
+            }
+        }
+        return false;
     }
 }

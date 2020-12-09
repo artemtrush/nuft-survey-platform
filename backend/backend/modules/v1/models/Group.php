@@ -3,6 +3,7 @@
 namespace backend\modules\v1\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "group".
@@ -24,6 +25,15 @@ class Group extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'group';
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className()
+            ],
+        ];
     }
 
     /**
