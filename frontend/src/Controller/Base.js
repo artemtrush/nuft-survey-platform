@@ -4,11 +4,17 @@ import api          from './../apiSingleton.js';
 import components   from './../Component';
 import pages        from './../Page';
 
+import * as CommonUtils     from "./../Utils/Common";
+import Session              from "./../Module/Session";
+
 export default class Base {
     constructor() {
         this.api = api;
         this.components = components;
         this.pages = pages;
+
+        this.utils = CommonUtils;
+        this.session = Session;
     }
 
     async init(params = {}) {

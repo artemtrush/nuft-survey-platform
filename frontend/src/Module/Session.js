@@ -1,25 +1,43 @@
 export default class Session {
-    static isAuth() {
-        return localStorage.getItem('SessionJWT') !== null;
-    }
-
-    static logout() {
-        localStorage.removeItem('SessionJWT');
-    }
-
     static setJWT(jwt) {
-        localStorage.setItem('SessionJWT', jwt);
+        localStorage.setItem('SessionJWT', jwt || null);
     }
 
     static getJWT() {
         return localStorage.getItem('SessionJWT');
     }
 
-    static setUserId(userId) {
-        localStorage.setItem('SessionUserId', userId);
+    static setTeacherId(teacherId) {
+        localStorage.setItem('SessionTeacherId', teacherId || null);
     }
 
-    static getUserId() {
-        return localStorage.getItem('SessionUserId');
+    static getTeacherId() {
+        return localStorage.getItem('SessionTeacherId');
+    }
+
+    static setAdminId(adminId) {
+        localStorage.setItem('SessionAdminId', adminId || null);
+    }
+
+    static getAdminId() {
+        return localStorage.getItem('SessionAdminId');
+    }
+
+    static isAuthorized() {
+        return Boolean(Session.getJWT());
+    }
+
+    static isAuthorizedTeacher() {
+        return Session.isAuthorized() && Boolean(Session.getTeacherId());
+    }
+
+    static isAuthorizedAdmin() {
+        return Session.isAuthorized() && Boolean(Session.getAdminId());
+    }
+
+    static logout() {
+        localStorage.removeItem('SessionJWT');
+        localStorage.removeItem('SessionTeacherId');
+        localStorage.removeItem('SessionAdminId');
     }
 }

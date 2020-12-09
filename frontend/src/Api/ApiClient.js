@@ -3,6 +3,7 @@ import 'whatwg-fetch';
 import queryString from 'query-string';
 import FormData from 'form-data';
 import Session from '../Module/Session';
+import { redirect } from '../Utils/Common';
 
 export default class ApiClient {
     constructor({ prefix = 'api/v1' } = {}) {
@@ -55,15 +56,11 @@ export default class ApiClient {
                 throw new Error('Bad response from server');
             }
 
-            // Access denied
             const data = await res.json();
 
-            if (data.token) {
-                Session.setJWT(data.token);
-            }
-
             if (data.error && data.error.type && data.error.type === 'ACCESS_DENIED') {
-                // @REMOVE TODO ABORT ACCESS DENIED
+                Session.logout();
+                redirect('entrance');
             }
 
             return data;

@@ -26,8 +26,8 @@ export default class Registration extends Base {
         this.units.submitButton = new Button({
             text  : 'ЗАРЕЄСТРУВАТИСЬ',
             color : 'blue',
-            action : () => {
-
+            action : async () => {
+                await this.registration();
             }
         });
 
@@ -66,5 +66,28 @@ export default class Registration extends Base {
 
     async events() {
         await this.triggerUnitsEvents();
+    }
+
+    async registration() {
+        const params = {
+            email          : this.units.emailInput.getValue(),
+            password       : this.units.passwordInput.getValue(),
+            passwordRepeat : this.units.passwordRepeatInput.getValue()
+        };
+
+        const response = await this.api.teachers.create(params);
+
+        const errorFields = response.error && response.error.fields ? response.error.fields : {};
+
+        this.units.emailInput.toggleError(errorFields.email);
+        this.units.passwordInput.toggleError(errorFields.password);
+        this.units.passwordRepeatInput.toggleError(errorFields.passwordRepeat);
+
+        if (response.status) {
+            this.session.setJWT(response.token);
+            this.session.setTeacherId(response.teacher.id);
+
+            this.utils.redirect('teacher_profile');
+        }
     }
 }

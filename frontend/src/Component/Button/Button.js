@@ -5,7 +5,6 @@ import './Button.less';
 export default class Button extends Base {
     defaultParams() {
         return {
-            id      : this.uuid(),
             text    : '',
             action  : () => {},
 
@@ -27,13 +26,25 @@ export default class Button extends Base {
     }
 
     async events() {
-        const { id, action, width, height } = this.params;
+        const { action, width, height } = this.params;
 
-        const $button = $(`#${id}`);
-
-        $button.click(action);
+        const $button = this.getElement();
 
         $button.css('width', width);
         $button.css('height', height);
+
+        if (action) {
+            $button.click(async () => {
+                if ($button.hasClass('disabled')) {
+                    return;
+                }
+
+                $button.addClass('disabled');
+
+                await action();
+
+                $button.removeClass('disabled');
+            });
+        }
     }
 }

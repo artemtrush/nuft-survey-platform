@@ -3,25 +3,34 @@
 import api                  from './../apiSingleton.js';
 import components           from './index';
 
-import config               from "./../Utils/Config";
-import Cache                from "./../Utils/Cache";
-import * as MathUtils       from "./../Utils/Math";
-import * as DateUtils       from "./../Utils/Date";
+// import config               from "./../Utils/Config";
+// import Cache                from "./../Utils/Cache";
+// import * as MathUtils       from "./../Utils/Math";
+// import * as DateUtils       from "./../Utils/Date";
+
 import * as CommonUtils     from "./../Utils/Common";
+import Session              from "./../Module/Session";
 
 export default class Base {
     constructor(params = {}) {
-        this.params = { ...this.defaultParams(), ...params };
+        this.params = {
+            id : this.uuid(),
+            ...this.defaultParams(),
+            ...params
+        };
 
         this.api = api;
         this.components = components;
 
-        this.config = config;
-        this.cache = new Cache();
-
-        this.math = MathUtils;
-        this.date = DateUtils;
         this.utils = CommonUtils;
+        this.session = Session;
+
+        // @REMOVE
+        // this.config = config;
+        // this.cache = new Cache();
+
+        // this.math = MathUtils;
+        // this.date = DateUtils;
     }
 
     defaultParams() {
@@ -47,5 +56,13 @@ export default class Base {
 
     async events() {
 
+    }
+
+    getId() {
+        return this.params.id;
+    }
+
+    getElement() {
+        return $(`#${this.getId()}`);
     }
 }

@@ -12,9 +12,7 @@ export default class Headline extends Caption {
     }
 
     async events() {
-        const { id } = this.params;
-
-        const $headline = $(`#${id}`);
+        const $headline = this.getElement();
 
         $headline.addClass('Headline');
     }

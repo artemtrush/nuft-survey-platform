@@ -2,6 +2,8 @@ import Entrance             from '../Controller/Entrance';
 import Authorization        from '../Controller/Authorization';
 import Registration         from '../Controller/Registration';
 
+import TeacherProfile       from '../Controller/Teacher/Profile';
+import TeacherSurveys       from '../Controller/Teacher/Surveys';
 
 export default {
     /* Unauthorised */
@@ -23,8 +25,8 @@ export default {
 
 
     /* Authorised teacher */
-    'teacher/profile': { controller: Entrance, name: 'teacher_profile' },
+    'teacher/profile': { controller: TeacherProfile, name: 'teacher_profile' },
 
-    'teacher/surveys': { controller: Entrance, name: 'teacher_surveys' },
+    'teacher/surveys': { controller: TeacherSurveys, name: 'teacher_surveys' },
     'teacher/surveys/creation': { controller: Entrance, name: 'teacher_survey_creation' }
 };

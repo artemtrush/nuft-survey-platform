@@ -21,8 +21,8 @@ export default class Authorization extends Base {
         this.units.submitButton = new Button({
             text  : 'ВХІД',
             color : 'green',
-            action : () => {
-
+            action : async () => {
+                await this.authorization();
             }
         });
 
@@ -60,5 +60,26 @@ export default class Authorization extends Base {
 
     async events() {
         await this.triggerUnitsEvents();
+    }
+
+    async authorization() {
+        const params = {
+            email    : this.units.emailInput.getValue(),
+            password : this.units.passwordInput.getValue()
+        };
+
+        const response = await this.api.sessions.create(params);
+
+        const errorFields = response.error && response.error.fields ? response.error.fields : {};
+
+        this.units.emailInput.toggleError(errorFields.email);
+        this.units.passwordInput.toggleError(errorFields.password);
+
+        if (response.status) {
+            this.session.setJWT(response.token);
+            this.session.setTeacherId(response.teacher.id);
+
+            this.utils.redirect('teacher_surveys');
+        }
     }
 }

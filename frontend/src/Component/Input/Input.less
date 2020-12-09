@@ -15,6 +15,7 @@
 
         border-radius: 5px;
         border: none;
+        border: 1px solid #F2F2F2;
 
         outline: none !important;
         background: #F2F2F2 !important;
@@ -31,24 +32,21 @@
     .password-toggle-button {
         display: none;
     }
+
+    .error-message {
+        display: none;
+    }
 }
 
 .Input.password {
     input {
         padding-right: 50px;
     }
-    input[type=password] {
-        padding-top: 19px;
-        font-size: 40px;
-    }
-    input[type=password]:-webkit-autofill::first-line {
-        font-size: 40px;
-    }
 
     .password-toggle-button {
         position: absolute;
         right: 18px;
-        bottom: 13px;
+        top: 45px;
         display: block;
         width: 22px;
         height: 22px;
@@ -61,5 +59,17 @@
     }
     .password-toggle-button.visible {
         background-image: url(/static/images/password-input-visible.png);
+    }
+}
+
+.Input.error {
+    .error-message {
+        display: block;
+        margin-top: 5px;
+        color: #EB5757;
+    }
+
+    input {
+        border-color: #EB5757;
     }
 }

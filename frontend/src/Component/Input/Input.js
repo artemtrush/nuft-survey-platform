@@ -5,7 +5,6 @@ import './Input.less';
 export default class Input extends Base {
     defaultParams() {
         return {
-            id          : this.uuid(),
             title       : '',
             placeholder : '',
             value       : '',
@@ -20,17 +19,18 @@ export default class Input extends Base {
         return `
             <div id="${id}" class="Input ${type}">
                 <span class="input-title">${title}</span>
-                <input type="${type}" placeholder="${placeholder}" value="${value}"/>
+                <input type="${type}" placeholder="${placeholder}" value="${value || ''}"/>
 
                 <div class="password-toggle-button"></div>
+                <div class="error-message"></div>
             </div>
         `;
     }
 
     async events() {
-        const { id, type } = this.params;
+        const { type } = this.params;
 
-        const $inputBlock = $(`#${id}`);
+        const $inputBlock = this.getElement();
         const $input = $('input', $inputBlock);
 
         if (type === 'password') {
@@ -45,6 +45,38 @@ export default class Input extends Base {
                     $passwordToggleButton.addClass('visible');
                 }
             });
+        }
+    }
+
+    getValue() {
+        const $input = $('input', this.getElement());
+
+        const inputText = $input.val() || '';
+
+        return inputText.trim();
+    }
+
+    showError(errorMessage) {
+        const $inputBlock = this.getElement();
+
+        $inputBlock.addClass('error');
+
+        $('.error-message', $inputBlock).text(errorMessage);
+    }
+
+    hideError() {
+        const $inputBlock = this.getElement();
+
+        $inputBlock.removeClass('error');
+
+        $('.error-message', $inputBlock).text('');
+    }
+
+    toggleError(errorMessages) {
+        if (errorMessages && errorMessages.length) {
+            this.showError(errorMessages[0]);
+        } else {
+            this.hideError();
         }
     }
 }

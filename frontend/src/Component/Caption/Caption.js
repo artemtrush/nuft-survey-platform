@@ -5,7 +5,6 @@ import './Caption.less';
 export default class Caption extends Base {
     defaultParams() {
         return {
-            id      : this.uuid(),
             text    : '',
 
             align   : 'center', // center | left | right
