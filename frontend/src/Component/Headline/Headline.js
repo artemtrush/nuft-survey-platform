@@ -12,6 +12,8 @@ export default class Headline extends Caption {
     }
 
     async events() {
+        await super.events();
+
         const $headline = this.getElement();
 
         $headline.addClass('Headline');

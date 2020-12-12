@@ -10,8 +10,8 @@ export default class TeacherBase extends Base {
     }
 
     async renderSidebar() {
-        const { DefaultSidebar } = this.components;
+        const { TeacherSidebar } = this.components;
 
-        return new DefaultSidebar();
+        return new TeacherSidebar();
     }
 }

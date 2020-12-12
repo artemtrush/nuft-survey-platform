@@ -9,7 +9,9 @@ export default class Input extends Base {
             placeholder : '',
             value       : '',
 
-            type        : 'text' // text | email | password
+            type        : 'text', // text | email | password
+
+            onChange    : () => {}
         };
     }
 
@@ -28,7 +30,7 @@ export default class Input extends Base {
     }
 
     async events() {
-        const { type } = this.params;
+        const { type, onChange } = this.params;
 
         const $inputBlock = this.getElement();
         const $input = $('input', $inputBlock);
@@ -46,6 +48,8 @@ export default class Input extends Base {
                 }
             });
         }
+
+        $input.on('change', onChange);
     }
 
     getValue() {
@@ -54,6 +58,12 @@ export default class Input extends Base {
         const inputText = $input.val() || '';
 
         return inputText.trim();
+    }
+
+    setValue(value) {
+        const $input = $('input', this.getElement());
+
+        $input.val((value || '').trim());
     }
 
     showError(errorMessage) {
@@ -78,5 +88,25 @@ export default class Input extends Base {
         } else {
             this.hideError();
         }
+    }
+
+    disable() {
+        const $inputBlock = this.getElement();
+        const $input = $('input', $inputBlock);
+
+        $inputBlock.addClass('disabled');
+        $input.prop('disabled', true);
+    }
+
+    enable() {
+        const $inputBlock = this.getElement();
+        const $input = $('input', $inputBlock);
+
+        $inputBlock.removeClass('disabled');
+        $input.prop('disabled', false);
+    }
+
+    clear() {
+        this.setValue('');
     }
 }

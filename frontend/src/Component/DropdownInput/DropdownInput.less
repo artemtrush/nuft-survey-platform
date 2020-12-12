@@ -1,0 +1,32 @@
+.DropdownInput {
+    position: relative;
+
+    .input-dropdown {
+        display: none;
+    }
+}
+
+.DropdownInput.dropdown-opened {
+    .input-dropdown {
+        width: 100%;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        position: absolute;
+        z-index: 100;
+
+        background: #f2f2f2;
+        border: 1px solid grey;
+
+        span {
+            padding: 0 20px;
+        }
+
+        span:hover {
+            background: dodgerblue;
+            color: white;
+        }
+    }
+}
