@@ -27,8 +27,16 @@ class GroupController extends Controller
     public function actionIndex()
     {
         $groups = Group::find();
+        if (Yii::$app->request->get('name')) {
+            $groups = $groups->where(['like', 'name', Yii::$app->request->get('name')]);
+        }
+        if (Yii::$app->request->get('curriculumId')) {
+            $groups = $groups->andWhere(['curriculumId' => Yii::$app->request->get('curriculumId')]);
+        }
         if ($groups->exists()) {
-            return $groups->orderBy(['name' => SORT_ASC])->asArray()->all();
+            return ApiHelper::successResponse([
+                'disciplines' => $groups->orderBy(['name' => SORT_ASC])->limit(10)->asArray()->all()
+            ]);
         } else {
             return ApiHelper::errorMessage(404, 'Груп не знайдено');
         }
@@ -40,14 +48,15 @@ class GroupController extends Controller
             if (!Group::checkIsset(Yii::$app->request->post('name'), Yii::$app->request->post('curriculumId'))) {
                 $group = new Group();
                 $group->name = Yii::$app->request->post('name');
-                $group->curriculum_id = Yii::$app->request->post('curriculumId');
+                $group->curriculumId = Yii::$app->request->post('curriculumId');
                 if ($group->save()) {
-                    return [
-                        'status' => 1,
+                    return ApiHelper::successResponse([
                         'group' => [
-                            'id' => $group->id
+                            'id' => $group->id,
+                            'name' => $group->name,
+                            'curriculumId' => $group->curriculumId
                         ]
-                    ];
+                    ]);
                 } else {
                     return ApiHelper::errorFields($group->getErrors());
                 }

@@ -2,8 +2,10 @@
 
 namespace backend\modules\v1\controllers;
 
+use backend\modules\v1\src\service\ApiHelper;
 use yii\rest\Controller;
 use yii\filters\VerbFilter;
+use Yii;
 
 class ServiceController extends Controller
 {
@@ -23,7 +25,16 @@ class ServiceController extends Controller
 
     public function actionSession()
     {
-        return ['status' => 1];
+        if (!Yii::$app->request->post('email')) {
+            return ApiHelper::errorFields([
+                'email' => ['Не вказано email']
+            ]);
+        }
+        if (!Yii::$app->request->post('password')) {
+            return ApiHelper::errorFields([
+                'password' => ['Не вказано password']
+            ]);
+        }
     }
 
     public function actionPasswordRecovery()

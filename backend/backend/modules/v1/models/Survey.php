@@ -4,19 +4,21 @@ namespace backend\modules\v1\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "survey".
  *
  * @property int $id
- * @property int|null $admin_id
- * @property int|null $curriculum_id
- * @property int|null $group_id
- * @property int|null $discipline_id
- * @property string|null $form_href
+ * @property int|null $adminId
+ * @property int|null $curriculumId
+ * @property int|null $groupId
+ * @property int|null $disciplineId
+ * @property string|null $linkForm
+ * @property string|null $linkResult
  * @property int $status
- * @property int|null $updated_at
- * @property int|null $created_at
+ * @property int|null $updatedAt
+ * @property int|null $createdAt
  *
  * @property AuthAdmin $admin
  * @property Curriculum $curriculum
@@ -40,7 +42,10 @@ class Survey extends \yii\db\ActiveRecord
     {
         return [
             [
-                'class' => TimestampBehavior::className()
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'createdAt',
+                'updatedAtAttribute' => 'updatedAt',
+                'value' => time(),
             ],
         ];
     }
@@ -51,13 +56,13 @@ class Survey extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['admin_id', 'curriculum_id', 'group_id', 'discipline_id', 'status', 'updated_at', 'created_at'], 'integer'],
-            [['form_href'], 'string'],
-            [['curriculum_id', 'group_id', 'discipline_id'], 'required'],
-            [['admin_id'], 'exist', 'skipOnError' => true, 'targetClass' => AuthAdmin::className(), 'targetAttribute' => ['admin_id' => 'id']],
-            [['curriculum_id'], 'exist', 'skipOnError' => true, 'targetClass' => Curriculum::className(), 'targetAttribute' => ['curriculum_id' => 'id']],
-            [['discipline_id'], 'exist', 'skipOnError' => true, 'targetClass' => Discipline::className(), 'targetAttribute' => ['discipline_id' => 'id']],
-            [['group_id'], 'exist', 'skipOnError' => true, 'targetClass' => Group::className(), 'targetAttribute' => ['group_id' => 'id']],
+            [['adminId', 'curriculumId', 'groupId', 'disciplineId', 'status', 'updatedAt', 'createdAt'], 'integer'],
+            [['linkForm', 'linkResult'], 'string'],
+            [['curriculumId', 'groupId', 'disciplineId'], 'required'],
+            [['adminId'], 'exist', 'skipOnError' => true, 'targetClass' => AuthAdmin::className(), 'targetAttribute' => ['adminId' => 'id']],
+            [['curriculumId'], 'exist', 'skipOnError' => true, 'targetClass' => Curriculum::className(), 'targetAttribute' => ['curriculumId' => 'id']],
+            [['disciplineId'], 'exist', 'skipOnError' => true, 'targetClass' => Discipline::className(), 'targetAttribute' => ['disciplineId' => 'id']],
+            [['groupId'], 'exist', 'skipOnError' => true, 'targetClass' => Group::className(), 'targetAttribute' => ['groupId' => 'id']],
         ];
     }
 
@@ -68,14 +73,15 @@ class Survey extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'admin_id' => 'Admin ID',
-            'curriculum_id' => 'Curriculum ID',
-            'group_id' => 'Group ID',
-            'discipline_id' => 'Discipline ID',
-            'form_href' => 'Form Href',
-            'status' => 'Status',
-            'updated_at' => 'Updated At',
-            'created_at' => 'Created At',
+            'adminId' => 'ID викладача',
+            'curriculumId' => 'Навчальна програма',
+            'groupId' => 'Група',
+            'disciplineId' => 'Дисциплына',
+            'linkForm' => 'Посилання на форму',
+            'linkResult' => 'Посилання на результати',
+            'status' => 'Статус',
+            'updatedAt' => 'Дата редагування',
+            'createdAat' => 'Дата створення',
         ];
     }
 
@@ -86,7 +92,7 @@ class Survey extends \yii\db\ActiveRecord
      */
     public function getAdmin()
     {
-        return $this->hasOne(AuthAdmin::className(), ['id' => 'admin_id']);
+        return $this->hasOne(AuthAdmin::className(), ['id' => 'adminId']);
     }
 
     /**
@@ -96,7 +102,7 @@ class Survey extends \yii\db\ActiveRecord
      */
     public function getCurriculum()
     {
-        return $this->hasOne(Curriculum::className(), ['id' => 'curriculum_id']);
+        return $this->hasOne(Curriculum::className(), ['id' => 'curriculumId']);
     }
 
     /**
@@ -106,7 +112,7 @@ class Survey extends \yii\db\ActiveRecord
      */
     public function getDiscipline()
     {
-        return $this->hasOne(Discipline::className(), ['id' => 'discipline_id']);
+        return $this->hasOne(Discipline::className(), ['id' => 'disciplineId']);
     }
 
     /**
@@ -116,16 +122,54 @@ class Survey extends \yii\db\ActiveRecord
      */
     public function getGroup()
     {
-        return $this->hasOne(Group::className(), ['id' => 'group_id']);
+        return $this->hasOne(Group::className(), ['id' => 'groupId']);
     }
 
     public static function checkIsset($curriculum_id, $group_id, $discipline_id)
     {
         if ($curriculum_id && $group_id && $discipline_id) {
-            if (self::findOne(['curriculum_id' => $curriculum_id, 'group_id' => $group_id, 'discipline_id' => $discipline_id])) {
+            if (self::findOne(['curriculumId' => $curriculum_id, 'groupId' => $group_id, 'disciplineId' => $discipline_id])) {
                 return true;
             }
         }
         return false;
+    }
+
+    public function getStatusLabel()
+    {
+        switch ($this->status) {
+            case self::STATUS_OPEN:
+                return 'OPENED';
+                break;
+            case self::STATUS_CLOSE:
+                return 'CLOSED';
+                break;
+        }
+        return '';
+    }
+
+    public function surveyTeacherData()
+    {
+        return [
+            'id' => $this->id,
+            'curriculumId' => $this->curriculumId,
+            'groupId' => $this->groupId,
+            'disciplineId' => $this->disciplineId,
+            'linkForm' => $this->linkForm,
+            'status' => $this->getStatusLabel()
+        ];
+    }
+
+    public function surveyAdminData()
+    {
+        return [
+            'id' => $this->id,
+            'curriculumId' => $this->curriculumId,
+            'groupId' => $this->groupId,
+            'disciplineId' => $this->disciplineId,
+            'linkForm' => $this->linkForm,
+            'linkResult' => $this->linkResult,
+            'status' => $this->getStatusLabel()
+        ];
     }
 }

@@ -4,6 +4,15 @@ namespace backend\modules\v1\src\service;
 
 class ApiHelper
 {
+    public static function successResponse($data = [])
+    {
+        $response = ['status' => 1];
+        if (!empty($data)) {
+            $response = array_merge($response, $data);
+        }
+        return $response;
+    }
+
     public static function errorMessage($code, $message)
     {
         return [

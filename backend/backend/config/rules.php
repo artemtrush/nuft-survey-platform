@@ -34,6 +34,7 @@ return [
         'extraPatterns' => [
             'POST /' => 'create',
             'GET /' => 'index',
+            'GET {id}' => 'view',
             'POST {id}/status' => 'status',
         ],
     ],

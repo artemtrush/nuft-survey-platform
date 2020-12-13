@@ -4,6 +4,7 @@ namespace backend\modules\v1\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "curriculum".
@@ -11,8 +12,8 @@ use yii\behaviors\TimestampBehavior;
  * @property int $id
  * @property string|null $name
  * @property string|null $period
- * @property int|null $updated_at
- * @property int|null $created_at
+ * @property int|null $updatedAt
+ * @property int|null $createdAt
  *
  * @property Discipline[] $disciplines
  * @property Group[] $groups
@@ -32,7 +33,10 @@ class Curriculum extends \yii\db\ActiveRecord
     {
         return [
             [
-                'class' => TimestampBehavior::className()
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'createdAt',
+                'updatedAtAttribute' => 'updatedAt',
+                'value' => time(),
             ],
         ];
     }
@@ -43,7 +47,7 @@ class Curriculum extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['updated_at', 'created_at'], 'integer'],
+            [['updatedAt', 'createdAt'], 'integer'],
             [['name', 'period'], 'required'],
             [['name', 'period'], 'string', 'max' => 255],
         ];
@@ -56,10 +60,10 @@ class Curriculum extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'period' => 'Period',
-            'updated_at' => 'Updated At',
-            'created_at' => 'Created At',
+            'name' => 'Назва',
+            'period' => 'Період',
+            'updatedAt' => 'Дата редагування',
+            'createdAt' => 'Дата створення',
         ];
     }
 
@@ -70,7 +74,7 @@ class Curriculum extends \yii\db\ActiveRecord
      */
     public function getDisciplines()
     {
-        return $this->hasMany(Discipline::className(), ['curriculum_id' => 'id']);
+        return $this->hasMany(Discipline::className(), ['curriculumId' => 'id']);
     }
 
     /**
@@ -80,7 +84,7 @@ class Curriculum extends \yii\db\ActiveRecord
      */
     public function getGroups()
     {
-        return $this->hasMany(Group::className(), ['curriculum_id' => 'id']);
+        return $this->hasMany(Group::className(), ['curriculumId' => 'id']);
     }
 
     /**
@@ -90,7 +94,7 @@ class Curriculum extends \yii\db\ActiveRecord
      */
     public function getSurveys()
     {
-        return $this->hasMany(Survey::className(), ['curriculum_id' => 'id']);
+        return $this->hasMany(Survey::className(), ['curriculumId' => 'id']);
     }
 
     public static function checkIsset($name, $period)

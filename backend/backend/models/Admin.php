@@ -12,8 +12,8 @@ use yii\web\IdentityInterface;
 /**
  * @property integer $id
  * @property string $email
- * @property string $name
- * @property string $surname
+ * @property string $firstName
+ * @property string $lastName
  *
  * Class Admin
  * @package backend\modules\admin\models
@@ -26,19 +26,6 @@ class Admin extends ActiveRecord implements IdentityInterface
     public static function tableName()
     {
         return 'auth_admin';
-    }
-
-    public function behaviors()
-    {
-        return [
-            [
-                'class' => TimestampBehavior::className()
-            ],
-            [
-                'class' => CapitalLetters::className(),
-                'fields' => ['surname', 'name'],
-            ],
-        ];
     }
 
     public function rules()
@@ -85,7 +72,7 @@ class Admin extends ActiveRecord implements IdentityInterface
 
     public function getAuthKey()
     {
-        return $this->auth_key;
+        return $this->authKey;
     }
 
     public function validateAuthKey($authKey)
@@ -95,22 +82,22 @@ class Admin extends ActiveRecord implements IdentityInterface
 
     public function validatePassword($password)
     {
-        return Yii::$app->security->validatePassword($password, $this->password);
+        return Yii::$app->security->validatePassword($password, $this->passwordToken);
     }
 
     public function setPassword($password)
     {
-        $this->password = Yii::$app->security->generatePasswordHash($password);
+        $this->passwordToken = Yii::$app->security->generatePasswordHash($password);
     }
 
     public function generateAuthKey()
     {
-        $this->auth_key = Yii::$app->security->generateRandomString();
+        $this->authKey = Yii::$app->security->generateRandomString();
     }
 
     public function generatePasswordResetToken()
     {
-        $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
+        $this->passwordResetToken = Yii::$app->security->generateRandomString() . '_' . time();
     }
 
     public static function findByPasswordResetToken($token)
@@ -120,7 +107,7 @@ class Admin extends ActiveRecord implements IdentityInterface
         }
 
         return static::findOne([
-            'password_reset_token' => $token,
+            'passwordResetToken' => $token,
             'status' => self::STATUS_ACTIVE,
         ]);
     }
@@ -138,11 +125,6 @@ class Admin extends ActiveRecord implements IdentityInterface
 
     public function removePasswordResetToken()
     {
-        $this->password_reset_token = null;
-    }
-
-    public function getFullName()
-    {
-        return $this->name . ' ' . $this->surname;
+        $this->passwordResetToken = null;
     }
 }

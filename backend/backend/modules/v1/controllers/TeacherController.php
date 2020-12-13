@@ -31,16 +31,11 @@ class TeacherController extends Controller
         try {
             $teacher = AuthAdmin::findOne($id);
             if ($teacher && in_array(AuthItem::TEACHER, $teacher->role)) {
-                return [
-                    'id' => $teacher->id,
-                    'email' => $teacher->email,
-                    'status' => [
-                        'id' => $teacher->status,
-                        'name' => AuthAdmin::status($teacher->status)
-                    ]
-                ];
+                return ApiHelper::successResponse([
+                    'teacher' => $teacher->teacherData()
+                ]);
             } else {
-                return ApiHelper::errorMessage(404, 'Викладача не знайдено');
+                return ApiHelper::successResponse();
             }
         } catch (\Exception $exception) {
             return ApiHelper::errorMessage(400, $exception->getMessage());
@@ -51,21 +46,20 @@ class TeacherController extends Controller
     {
         try {
             $teacher = new AuthAdmin();
-            $teacher->name = Yii::$app->request->post('email');
+            $teacher->scenario = AuthAdmin::SCENARIO_CREATE;
             $teacher->email = Yii::$app->request->post('email');
-            $teacher->_password = Yii::$app->request->post('password');
+            $teacher->password = Yii::$app->request->post('password');
             $teacher->passwordRepeat = Yii::$app->request->post('passwordRepeat');
-            $teacher->password = Yii::$app->security->generatePasswordHash(Yii::$app->request->post('password'));
-            $teacher->auth_key = Yii::$app->security->generateRandomString();
+            $teacher->passwordToken = Yii::$app->security->generatePasswordHash(Yii::$app->request->post('password'));
+            $teacher->authKey = Yii::$app->security->generateRandomString();
+            $teacher->confirmationCode = null;
             $teacher->role = [AuthItem::TEACHER];
             $teacher->status = Admin::STATUS_NOT_ACTIVE;
             if ($teacher->save()) {
-                return [
-                    'status' => 1,
-                    'teacher' => [
-                        'id' => $teacher->id
-                    ]
-                ];
+                return ApiHelper::successResponse([
+                    'token' => '',
+                    'teacher' => $teacher->teacherData()
+                ]);
             } else {
                 return ApiHelper::errorFields($teacher->getErrors());
             }
@@ -76,34 +70,34 @@ class TeacherController extends Controller
 
     public function actionUpdate($id)
     {
-        $post = Yii::$app->request->post();
         try {
             $teacher = AuthAdmin::findOne($id);
             if ($teacher && in_array(AuthItem::TEACHER, $teacher->role)) {
-                $teacher->name = $post['firstName'] . ' ' . $post['middleName'];
-                $teacher->surname = $post['lastName'];
-                $teacher->email = $post['email'];
-                $teacher->password = Yii::$app->security->generatePasswordHash($post['password']);
-                if (isset($post['newPassword']) && isset($post['newPasswordRepeat'])) {
-                    $teacher->_password = $post['newPassword'];
-                    $teacher->passwordRepeat = $post['newPasswordRepeat'];
-                    $teacher->password = Yii::$app->security->generatePasswordHash($post['newPassword']);
-                } else {
-                    $teacher->_password = $post['password'];
-                    $teacher->passwordRepeat = $post['password'];
+                $teacher->scenario = AuthAdmin::SCENARIO_UPDATE;
+                if (!Yii::$app->security->validatePassword(Yii::$app->request->post('password'), $teacher->passwordToken)) {
+                    return ApiHelper::errorFields([
+                        'password' => ['Невірний пароль']
+                    ]);
+                }
+                $teacher->firstName = Yii::$app->request->post('firstName');
+                $teacher->middleName = Yii::$app->request->post('middleName');
+                $teacher->lastName = Yii::$app->request->post('lastName');
+                $teacher->email = Yii::$app->request->post('email');
+                $teacher->passwordToken = Yii::$app->security->generatePasswordHash(Yii::$app->request->post('password'));
+                if (Yii::$app->request->post('newPassword') && Yii::$app->request->post('newPasswordRepeat')) {
+                    $teacher->newPassword = Yii::$app->request->post('newPassword');
+                    $teacher->newPasswordRepeat = Yii::$app->request->post('newPasswordRepeat');
+                    $teacher->passwordToken = Yii::$app->security->generatePasswordHash(Yii::$app->request->post('newPassword'));
                 }
                 if ($teacher->save()) {
-                    return [
-                        'status' => 1,
-                        'teacher' => [
-                            'id' => $teacher->id
-                        ]
-                    ];
+                    return ApiHelper::successResponse([
+                        'teacher' => $teacher->teacherData()
+                    ]);
                 } else {
                     return ApiHelper::errorFields($teacher->getErrors());
                 }
             } else {
-                return ApiHelper::errorMessage(404, 'Викладача не знайдено');
+                return ApiHelper::successResponse();
             }
         } catch (\Exception $exception) {
             return ApiHelper::errorMessage(400, $exception->getMessage());

@@ -4,15 +4,16 @@ namespace backend\modules\v1\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "group".
  *
  * @property int $id
  * @property string|null $name
- * @property int|null $curriculum_id
- * @property int|null $updated_at
- * @property int|null $created_at
+ * @property int|null $curriculumId
+ * @property int|null $updatedAt
+ * @property int|null $createdAt
  *
  * @property Curriculum $curriculum
  * @property Survey[] $surveys
@@ -31,7 +32,10 @@ class Group extends \yii\db\ActiveRecord
     {
         return [
             [
-                'class' => TimestampBehavior::className()
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'createdAt',
+                'updatedAtAttribute' => 'updatedAt',
+                'value' => time(),
             ],
         ];
     }
@@ -42,10 +46,10 @@ class Group extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['curriculum_id', 'updated_at', 'created_at'], 'integer'],
+            [['curriculumId', 'updatedAt', 'createdAt'], 'integer'],
             [['name'], 'string', 'max' => 255],
-            [['name', 'curriculum_id'], 'required'],
-            [['curriculum_id'], 'exist', 'skipOnError' => true, 'targetClass' => Curriculum::className(), 'targetAttribute' => ['curriculum_id' => 'id']],
+            [['name', 'curriculumId'], 'required'],
+            [['curriculumId'], 'exist', 'skipOnError' => true, 'targetClass' => Curriculum::className(), 'targetAttribute' => ['curriculumId' => 'id']],
         ];
     }
 
@@ -56,10 +60,10 @@ class Group extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'curriculum_id' => 'Curriculum ID',
-            'updated_at' => 'Updated At',
-            'created_at' => 'Created At',
+            'name' => 'Назва',
+            'curriculum_id' => 'Навчальна програма',
+            'updated_at' => 'Дата редагування',
+            'created_at' => 'Дата створення',
         ];
     }
 
@@ -70,7 +74,7 @@ class Group extends \yii\db\ActiveRecord
      */
     public function getCurriculum()
     {
-        return $this->hasOne(Curriculum::className(), ['id' => 'curriculum_id']);
+        return $this->hasOne(Curriculum::className(), ['id' => 'curriculumId']);
     }
 
     /**
@@ -80,13 +84,13 @@ class Group extends \yii\db\ActiveRecord
      */
     public function getSurveys()
     {
-        return $this->hasMany(Survey::className(), ['group_id' => 'id']);
+        return $this->hasMany(Survey::className(), ['groupId' => 'id']);
     }
 
     public static function checkIsset($name, $curriculum_id)
     {
         if ($name && $curriculum_id) {
-            if (self::findOne(['name' => $name, 'curriculum_id' => $curriculum_id])) {
+            if (self::findOne(['name' => $name, 'curriculumId' => $curriculum_id])) {
                 return true;
             }
         }

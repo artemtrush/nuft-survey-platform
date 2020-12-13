@@ -12,20 +12,21 @@ class m201206_234624_create_table_survey extends Migration
     {
         $this->createTable('{{%survey}}', [
             'id' => $this->primaryKey(),
-            'admin_id' => $this->integer()->unsigned(),
-            'curriculum_id' => $this->integer(),
-            'group_id' => $this->integer(),
-            'discipline_id' => $this->integer(),
-            'form_href' => $this->text(),
+            'adminId' => $this->integer()->unsigned(),
+            'curriculumId' => $this->integer(),
+            'groupId' => $this->integer(),
+            'disciplineId' => $this->integer(),
+            'linkForm' => $this->text(),
+            'linkResult' => $this->text(),
             'status' => $this->tinyInteger()->notNull()->defaultValue(Survey::STATUS_OPEN),
-            'updated_at' => $this->integer(),
-            'created_at' => $this->integer()
+            'updatedAt' => $this->integer(),
+            'createdAt' => $this->integer()
         ], $this->tableOptions);
 
         $this->addForeignKey(
-            'fk-survey-admin_id-id',
+            'fk-survey-adminId-id',
             'survey',
-            'admin_id',
+            'adminId',
             'auth_admin',
             'id',
             'CASCADE',
@@ -33,9 +34,9 @@ class m201206_234624_create_table_survey extends Migration
         );
 
         $this->addForeignKey(
-            'fk-survey-curriculum_id-id',
+            'fk-survey-curriculumId-id',
             'survey',
-            'curriculum_id',
+            'curriculumId',
             'curriculum',
             'id',
             'CASCADE',
@@ -43,9 +44,9 @@ class m201206_234624_create_table_survey extends Migration
         );
 
         $this->addForeignKey(
-            'fk-survey-group_id-id',
+            'fk-survey-groupId-id',
             'survey',
-            'group_id',
+            'groupId',
             'group',
             'id',
             'CASCADE',
@@ -53,9 +54,9 @@ class m201206_234624_create_table_survey extends Migration
         );
 
         $this->addForeignKey(
-            'fk-survey-discipline_id-id',
+            'fk-survey-disciplineId-id',
             'survey',
-            'discipline_id',
+            'disciplineId',
             'discipline',
             'id',
             'CASCADE',

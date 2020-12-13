@@ -12,15 +12,15 @@ class m201206_234622_create_table_group extends Migration
         $this->createTable('{{%group}}', [
             'id' => $this->primaryKey(),
             'name' => $this->string(),
-            'curriculum_id' => $this->integer(),
-            'updated_at' => $this->integer(),
-            'created_at' => $this->integer()
+            'curriculumId' => $this->integer(),
+            'updatedAt' => $this->integer(),
+            'createdAt' => $this->integer()
         ], $this->tableOptions);
 
         $this->addForeignKey(
-            'fk-group-curriculum_id-id',
+            'fk-group-curriculumId-id',
             'group',
-            'curriculum_id',
+            'curriculumId',
             'curriculum',
             'id',
             'CASCADE',

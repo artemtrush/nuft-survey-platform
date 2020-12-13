@@ -12,15 +12,15 @@ class m201206_234623_create_table_discipline extends Migration
         $this->createTable('{{%discipline}}', [
             'id' => $this->primaryKey(),
             'name' => $this->string(),
-            'curriculum_id' => $this->integer(),
-            'updated_at' => $this->integer(),
-            'created_at' => $this->integer()
+            'curriculumId' => $this->integer(),
+            'updatedAt' => $this->integer(),
+            'createdAt' => $this->integer()
         ], $this->tableOptions);
 
         $this->addForeignKey(
-            'fk-discipline-curriculum_id-id',
+            'fk-discipline-curriculumId-id',
             'discipline',
-            'curriculum_id',
+            'curriculumId',
             'curriculum',
             'id',
             'CASCADE',

@@ -12,24 +12,36 @@ class CurriculumController extends Controller
 {
     public function behaviors()
     {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'index' => ['GET'],
-                    'create' => ['POST'],
-                ],
+        $behaviors = parent::behaviors();
+        $behaviors['verbs'] = [
+            'class' => VerbFilter::className(),
+            'actions' => [
+                'index' => ['GET'],
+                'create' => ['POST'],
             ],
         ];
+        $behaviors['authenticator'] = [
+            'class' => \sizeg\jwt\JwtHttpBearerAuth::class,
+        ];
+
+        return $behaviors;
     }
 
     public function actionIndex()
     {
-        $curriculum = Curriculum::find();
-        if ($curriculum->exists()) {
-            return $curriculum->orderBy(['name' => SORT_ASC])->asArray()->all();
+        $curriculums = Curriculum::find();
+        if (Yii::$app->request->get('name')) {
+            $curriculums = $curriculums->where(['like', 'name', Yii::$app->request->get('name')]);
+        }
+        if (Yii::$app->request->get('period')) {
+            $curriculums = $curriculums->andWhere(['period' => Yii::$app->request->get('period')]);
+        }
+        if ($curriculums->exists()) {
+            return ApiHelper::successResponse([
+                'curriculums' => $curriculums->orderBy(['name' => SORT_ASC])->limit(10)->asArray()->all()
+            ]);
         } else {
-            return ApiHelper::errorMessage(404, 'Програм не знайдено');
+            return ApiHelper::successResponse();
         }
     }
 
@@ -41,12 +53,13 @@ class CurriculumController extends Controller
                 $curriculum->name = Yii::$app->request->post('name');
                 $curriculum->period = Yii::$app->request->post('period');
                 if ($curriculum->save()) {
-                    return [
-                        'status' => 1,
+                    return ApiHelper::successResponse([
                         'curriculum' => [
-                            'id' => $curriculum->id
+                            'id' => $curriculum->id,
+                            'name' => $curriculum->name,
+                            'period' => $curriculum->period
                         ]
-                    ];
+                    ]);
                 } else {
                     return ApiHelper::errorFields($curriculum->getErrors());
                 }

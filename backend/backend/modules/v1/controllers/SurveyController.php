@@ -17,6 +17,7 @@ class SurveyController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'index' => ['GET'],
+                    'view' => ['GET'],
                     'create' => ['POST'],
                     'status' => ['POST'],
                 ],
@@ -27,10 +28,40 @@ class SurveyController extends Controller
     public function actionIndex()
     {
         $surveys = Survey::find();
+        if (Yii::$app->request->get('disciplineId')) {
+            $surveys = $surveys->where(['disciplineId' => Yii::$app->request->get('disciplineId')]);
+        }
+        if (Yii::$app->request->get('curriculumId')) {
+            $surveys = $surveys->andWhere(['curriculumId' => Yii::$app->request->get('curriculumId')]);
+        }
+        if (Yii::$app->request->get('groupId')) {
+            $surveys = $surveys->andWhere(['groupId' => Yii::$app->request->get('groupId')]);
+        }
+        if (Yii::$app->request->get('page') && Yii::$app->request->get('pageSize')) {
+            $surveys = $surveys->limit((int)Yii::$app->request->get('pageSize'))->offset((int)Yii::$app->request->get('pageSize') * (int)Yii::$app->request->get('page'));
+        }
         if ($surveys->exists()) {
-            return $surveys->orderBy(['name' => SORT_ASC])->asArray()->all();
+            return ApiHelper::successResponse([
+                'surveys' => $surveys->asArray()->all()
+            ]);
         } else {
-            return ApiHelper::errorMessage(404, 'Опитувань не знайдено');
+            return ApiHelper::successResponse();
+        }
+    }
+
+    public function actionView($id)
+    {
+        try {
+            $survey = Survey::findOne($id);
+            if ($survey) {
+                return ApiHelper::successResponse([
+                    'survey' => $survey->surveyTeacherData()
+                ]);
+            } else {
+                return ApiHelper::successResponse();
+            }
+        } catch (\Exception $exception) {
+            return ApiHelper::errorMessage(400, $exception->getMessage());
         }
     }
 
@@ -39,16 +70,18 @@ class SurveyController extends Controller
         try {
             if (!Survey::checkIsset(Yii::$app->request->post('curriculumId'), Yii::$app->request->post('groupId'), Yii::$app->request->post('disciplineId'))) {
                 $survey = new Survey();
-                $survey->curriculum_id = Yii::$app->request->post('curriculumId');
-                $survey->group_id = Yii::$app->request->post('groupId');
-                $survey->discipline_id = Yii::$app->request->post('disciplineId');
+                $survey->curriculumId = Yii::$app->request->post('curriculumId');
+                $survey->groupId = Yii::$app->request->post('groupId');
+                $survey->disciplineId = Yii::$app->request->post('disciplineId');
                 if ($survey->save()) {
-                    return [
-                        'status' => 1,
+                    return ApiHelper::successResponse([
                         'survey' => [
-                            'id' => $survey->id
+                            'id' => $survey->id,
+                            'groupId' => $survey->groupId,
+                            'disciplineId' => $survey->disciplineId,
+                            'curriculumId' => $survey->curriculumId
                         ]
-                    ];
+                    ]);
                 } else {
                     return ApiHelper::errorFields($survey->getErrors());
                 }
