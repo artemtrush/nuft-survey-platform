@@ -44,6 +44,7 @@ class Group extends \yii\db\ActiveRecord
         return [
             [['curriculum_id', 'updated_at', 'created_at'], 'integer'],
             [['name'], 'string', 'max' => 255],
+            [['name', 'curriculum_id'], 'required'],
             [['curriculum_id'], 'exist', 'skipOnError' => true, 'targetClass' => Curriculum::className(), 'targetAttribute' => ['curriculum_id' => 'id']],
         ];
     }
@@ -80,5 +81,15 @@ class Group extends \yii\db\ActiveRecord
     public function getSurveys()
     {
         return $this->hasMany(Survey::className(), ['group_id' => 'id']);
+    }
+
+    public static function checkIsset($name, $curriculum_id)
+    {
+        if ($name && $curriculum_id) {
+            if (self::findOne(['name' => $name, 'curriculum_id' => $curriculum_id])) {
+                return true;
+            }
+        }
+        return false;
     }
 }

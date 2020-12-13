@@ -43,7 +43,7 @@ class CurriculumController extends Controller
                 if ($curriculum->save()) {
                     return [
                         'status' => 1,
-                        'teacher' => [
+                        'curriculum' => [
                             'id' => $curriculum->id
                         ]
                     ];

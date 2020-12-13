@@ -82,4 +82,14 @@ class Discipline extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Survey::className(), ['discipline_id' => 'id']);
     }
+
+    public static function checkIsset($name, $curriculum_id)
+    {
+        if ($name && $curriculum_id) {
+            if (self::findOne(['name' => $name, 'curriculum_id' => $curriculum_id])) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
