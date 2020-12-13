@@ -67,9 +67,11 @@ class SurveyController extends Controller
 
     public function actionCreate()
     {
+        set_time_limit(240);
         try {
             if (!Survey::checkIsset(Yii::$app->request->post('curriculumId'), Yii::$app->request->post('groupId'), Yii::$app->request->post('disciplineId'))) {
                 $survey = new Survey();
+                //$survey->adminId = '';
                 $survey->curriculumId = Yii::$app->request->post('curriculumId');
                 $survey->groupId = Yii::$app->request->post('groupId');
                 $survey->disciplineId = Yii::$app->request->post('disciplineId');
@@ -87,7 +89,7 @@ class SurveyController extends Controller
                 }
             } else {
                 return ApiHelper::errorFields([
-                    'name' => 'Опитування існує'
+                    'name' => ['Опитування існує']
                 ]);
             }
         } catch (\Exception $exception) {

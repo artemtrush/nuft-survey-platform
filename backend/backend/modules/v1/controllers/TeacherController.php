@@ -74,7 +74,7 @@ class TeacherController extends Controller
             $teacher = AuthAdmin::findOne($id);
             if ($teacher && in_array(AuthItem::TEACHER, $teacher->role)) {
                 $teacher->scenario = AuthAdmin::SCENARIO_UPDATE;
-                if (!Yii::$app->security->validatePassword(Yii::$app->request->post('password'), $teacher->passwordToken)) {
+                if (!Yii::$app->request->post('password') || !Yii::$app->security->validatePassword(Yii::$app->request->post('password'), $teacher->passwordToken)) {
                     return ApiHelper::errorFields([
                         'password' => ['Невірний пароль']
                     ]);
@@ -83,7 +83,6 @@ class TeacherController extends Controller
                 $teacher->middleName = Yii::$app->request->post('middleName');
                 $teacher->lastName = Yii::$app->request->post('lastName');
                 $teacher->email = Yii::$app->request->post('email');
-                $teacher->passwordToken = Yii::$app->security->generatePasswordHash(Yii::$app->request->post('password'));
                 if (Yii::$app->request->post('newPassword') && Yii::$app->request->post('newPasswordRepeat')) {
                     $teacher->newPassword = Yii::$app->request->post('newPassword');
                     $teacher->newPasswordRepeat = Yii::$app->request->post('newPasswordRepeat');

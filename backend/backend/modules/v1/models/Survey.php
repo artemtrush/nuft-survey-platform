@@ -2,6 +2,7 @@
 
 namespace backend\modules\v1\models;
 
+use backend\modules\v1\src\behavior\SurveyGoogle;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
@@ -47,6 +48,9 @@ class Survey extends \yii\db\ActiveRecord
                 'updatedAtAttribute' => 'updatedAt',
                 'value' => time(),
             ],
+            [
+                'class' => SurveyGoogle::className()
+            ]
         ];
     }
 
@@ -155,7 +159,7 @@ class Survey extends \yii\db\ActiveRecord
             'curriculumId' => $this->curriculumId,
             'groupId' => $this->groupId,
             'disciplineId' => $this->disciplineId,
-            'linkForm' => $this->linkForm,
+            'link' => $this->linkForm,
             'status' => $this->getStatusLabel()
         ];
     }

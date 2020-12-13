@@ -62,7 +62,7 @@ class GroupController extends Controller
                 }
             } else {
                 return ApiHelper::errorFields([
-                    'name' => 'Група існує'
+                    'name' => ['Група існує']
                 ]);
             }
         } catch (\Exception $exception) {

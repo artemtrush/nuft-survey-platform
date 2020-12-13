@@ -61,7 +61,7 @@ class DisciplineController extends Controller
                 }
             } else {
                 return ApiHelper::errorFields([
-                    'name' => 'Дисципліна існує'
+                    'name' => ['Дисципліна існує']
                 ]);
             }
         } catch (\Exception $exception) {
