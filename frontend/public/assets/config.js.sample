@@ -1,0 +1,4 @@
+window.appConfig = {
+    API_URL    : 'http://localhost:8000',
+    API_PREFIX : '/api/v1'
+};

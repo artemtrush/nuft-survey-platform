@@ -1,0 +1,37 @@
+.HorizontalLine {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    width: 100%;
+
+    span {
+        position: relative;
+        display: block;
+        height: 1px;
+        width: 90%;
+        max-width: 700px;
+        background: #333333;
+
+        div {
+            height: 25px;
+            width: 25px;
+            top: -13px;
+            border-radius: 50%;
+            position: absolute;
+        }
+        div.first-circle {
+            right: calc((25px + 14px) * 2);
+            background: #2D9CDB;
+        }
+        div.second-circle {
+            right: calc(25px + 14px);
+            background: #27AE60;
+        }
+        div.third-circle {
+            right: 0;
+            background: #C4C4C4;
+        }
+    }
+}

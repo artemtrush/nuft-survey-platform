@@ -1,0 +1,79 @@
+.Input {
+    display: block;
+    width: 100%;
+    margin-bottom: 14px;
+    position: relative;
+
+    .input-title {
+        margin-bottom: 4px;
+        display: block;
+    }
+
+    input {
+        width: 100%;
+        height: 50px;
+
+        border-radius: 5px;
+        border: none;
+        border: 1px solid #F2F2F2;
+
+        outline: none !important;
+        background: #F2F2F2 !important;
+        box-shadow: none !important;
+
+        padding: 15px 20px;
+    }
+
+    input:-webkit-autofill::first-line {
+        font-size: 18px;
+        font-family: Roboto;
+    }
+
+    .password-toggle-button {
+        display: none;
+    }
+
+    .error-message {
+        display: none;
+    }
+}
+
+.Input.password {
+    input {
+        padding-right: 50px;
+    }
+
+    .password-toggle-button {
+        position: absolute;
+        right: 18px;
+        top: 45px;
+        display: block;
+        width: 22px;
+        height: 22px;
+        background-image: url(/static/images/password-input-hidden.png);
+        background-size: 22px auto;
+        background-repeat: no-repeat;
+        background-position: 50%;
+        cursor: pointer;
+        z-index: 100;
+    }
+    .password-toggle-button.visible {
+        background-image: url(/static/images/password-input-visible.png);
+    }
+}
+
+.Input.error {
+    .error-message {
+        display: block;
+        margin-top: 5px;
+        color: #EB5757;
+    }
+
+    input {
+        border-color: #EB5757;
+    }
+}
+
+.Input.disabled {
+    opacity: 0.7;
+}

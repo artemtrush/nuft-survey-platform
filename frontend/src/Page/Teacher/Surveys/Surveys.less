@@ -1,0 +1,41 @@
+.Surveys {
+    .surveys-head {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+
+        .Headline {
+            width: auto;
+            margin-right: 20px;
+        }
+
+        .Button {
+            height: 50px !important;
+            width: 170px !important;
+            position: relative;
+            padding-left: 30px;
+            font-size: 20px;
+        }
+
+        .Button:before {
+            content: '';
+            display: block;
+            width: 20px;
+            height: 20px;
+            background: url('/static/images/add-icon.png');
+            background-repeat: no-repeat;
+            background-size: 20px;
+            background-position: center;
+            position: absolute;
+            left: 15px;
+        }
+    }
+
+    .in-progress-block {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+}

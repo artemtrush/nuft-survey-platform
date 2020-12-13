@@ -1,0 +1,61 @@
+.TeacherSidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: right;
+
+    width: 15vw;
+    min-width: 230px;
+    height: 100%;
+    background: linear-gradient(180deg, #27AE60 0%, #2D9CDB 100%);
+
+    .sidebar-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 80%;
+        height: 70px;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 50px 0px 0px 50px;
+        font-size: 22px;
+        cursor: pointer;
+        margin-bottom: 10px;
+    }
+
+    .sidebar-btn.active {
+        background: #FFFFFF;
+        font-weight: bold;
+    }
+
+    .sidebar-head {
+        margin-top: 50px;
+        margin-bottom: 50px;
+        margin-right: 10px;
+
+        font-weight: bold;
+        font-size: 30px;
+        color: #FFFFFF;
+    }
+
+    .top-btns {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-end;
+        width: 100%;
+    }
+
+    .bottom-btns {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-end;
+        width: 100%;
+        margin-bottom: 50px;
+    }
+
+    .logout-btn {
+        color: #E74C3C;
+        font-weight: bold;
+    }
+}

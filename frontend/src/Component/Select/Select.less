@@ -1,0 +1,50 @@
+.Select {
+    display: block;
+    width: 100%;
+    margin-bottom: 14px;
+    position: relative;
+
+    .select-title {
+        margin-bottom: 4px;
+        display: block;
+    }
+
+    select {
+        width: 100%;
+        height: 50px;
+        line-height: 18px;
+
+        border-radius: 5px;
+        border: none;
+        border: 1px solid #F2F2F2;
+
+        outline: none !important;
+        background: #F2F2F2 !important;
+        box-shadow: none !important;
+
+        padding: 15px 20px;
+
+        -webkit-appearance: none;
+        appearance: none;
+    }
+
+    select::-ms-expand {
+        display: none;
+    }
+
+    .error-message {
+        display: none;
+    }
+}
+
+.Select.error {
+    .error-message {
+        display: block;
+        margin-top: 5px;
+        color: #EB5757;
+    }
+
+    select {
+        border-color: #EB5757;
+    }
+}
