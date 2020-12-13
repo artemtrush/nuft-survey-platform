@@ -12,17 +12,20 @@ class SurveyController extends Controller
 {
     public function behaviors()
     {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'index' => ['GET'],
-                    'view' => ['GET'],
-                    'create' => ['POST'],
-                    'status' => ['POST'],
-                ],
+        $behaviors = parent::behaviors();
+        $behaviors['verbs'] = [
+            'class' => VerbFilter::className(),
+            'actions' => [
+                'index' => ['GET'],
+                'view' => ['GET'],
+                'create' => ['POST'],
+                'status' => ['POST'],
             ],
         ];
+        $behaviors['authenticator'] = [
+            'class' => \sizeg\jwt\JwtHttpBearerAuth::class
+        ];
+        return $behaviors;
     }
 
     public function actionIndex()
@@ -71,7 +74,9 @@ class SurveyController extends Controller
         try {
             if (!Survey::checkIsset(Yii::$app->request->post('curriculumId'), Yii::$app->request->post('groupId'), Yii::$app->request->post('disciplineId'))) {
                 $survey = new Survey();
-                //$survey->adminId = '';
+                if (!empty(Yii::$app->user->identity->getId())) {
+                    $survey->adminId = Yii::$app->user->identity->getId();
+                }
                 $survey->curriculumId = Yii::$app->request->post('curriculumId');
                 $survey->groupId = Yii::$app->request->post('groupId');
                 $survey->disciplineId = Yii::$app->request->post('disciplineId');

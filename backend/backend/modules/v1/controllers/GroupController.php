@@ -2,7 +2,6 @@
 
 namespace backend\modules\v1\controllers;
 
-use backend\modules\v1\models\Curriculum;
 use backend\modules\v1\models\Group;
 use backend\modules\v1\src\service\ApiHelper;
 use yii\rest\Controller;
@@ -13,15 +12,18 @@ class GroupController extends Controller
 {
     public function behaviors()
     {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'index' => ['GET'],
-                    'create' => ['POST']
-                ],
+        $behaviors = parent::behaviors();
+        $behaviors['verbs'] = [
+            'class' => VerbFilter::className(),
+            'actions' => [
+                'index' => ['GET'],
+                'create' => ['POST'],
             ],
         ];
+        $behaviors['authenticator'] = [
+            'class' => \sizeg\jwt\JwtHttpBearerAuth::class
+        ];
+        return $behaviors;
     }
 
     public function actionIndex()

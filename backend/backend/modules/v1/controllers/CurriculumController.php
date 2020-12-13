@@ -21,9 +21,8 @@ class CurriculumController extends Controller
             ],
         ];
         $behaviors['authenticator'] = [
-            'class' => \sizeg\jwt\JwtHttpBearerAuth::class,
+            'class' => \sizeg\jwt\JwtHttpBearerAuth::class
         ];
-
         return $behaviors;
     }
 

@@ -33,4 +33,16 @@ class ApiHelper
             ]
         ];
     }
+
+    public static function generateJWTToken($uid, $role)
+    {
+        $time = time();
+        $token = \Yii::$app->jwt->getBuilder()
+            ->issuedAt($time)
+            ->expiresAt($time + 60 * 60 * 24)
+            ->withClaim('uid', $uid)
+            ->withClaim('role', $role)
+            ->getToken(\Yii::$app->jwt->getSigner('HS256'), \Yii::$app->jwt->getKey());
+        return $token->__toString();
+    }
 }

@@ -50,9 +50,18 @@ class Admin extends ActiveRecord implements IdentityInterface
         return $this->hasMany(AuthAssignment::className(), ['user_id' => 'id']);
     }
 
+    /**
+     * {@inheritdoc}
+     * @param \Lcobucci\JWT\Token $token
+     */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        foreach (self::find()->all() as $user) {
+            if ($user['id'] == $token->getClaim('uid')) {
+                return $user;
+            }
+        }
+        return null;
     }
 
     public static function findByUsername($email)

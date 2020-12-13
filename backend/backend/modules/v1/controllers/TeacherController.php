@@ -14,16 +14,20 @@ class TeacherController extends Controller
 {
     public function behaviors()
     {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'view' => ['GET'],
-                    'create' => ['POST'],
-                    'update' => ['POST'],
-                ],
+        $behaviors = parent::behaviors();
+        $behaviors['verbs'] = [
+            'class' => VerbFilter::className(),
+            'actions' => [
+                'view' => ['GET'],
+                'create' => ['POST'],
+                'update' => ['POST'],
             ],
         ];
+        $behaviors['authenticator'] = [
+            'class' => \sizeg\jwt\JwtHttpBearerAuth::class,
+            'except' => ['create']
+        ];
+        return $behaviors;
     }
 
     public function actionView($id)
@@ -56,8 +60,9 @@ class TeacherController extends Controller
             $teacher->role = [AuthItem::TEACHER];
             $teacher->status = Admin::STATUS_NOT_ACTIVE;
             if ($teacher->save()) {
+                $token = ApiHelper::generateJWTToken($teacher->id, 'teacher');
                 return ApiHelper::successResponse([
-                    'token' => '',
+                    'token' => $token,
                     'teacher' => $teacher->teacherData()
                 ]);
             } else {
