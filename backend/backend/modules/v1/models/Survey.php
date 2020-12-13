@@ -14,6 +14,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int|null $group_id
  * @property int|null $discipline_id
  * @property string|null $form_href
+ * @property int $status
  * @property int|null $updated_at
  * @property int|null $created_at
  *
@@ -24,6 +25,9 @@ use yii\behaviors\TimestampBehavior;
  */
 class Survey extends \yii\db\ActiveRecord
 {
+    const STATUS_OPEN = 1;
+    const STATUS_CLOSE = 3;
+
     /**
      * {@inheritdoc}
      */
@@ -47,8 +51,9 @@ class Survey extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['admin_id', 'curriculum_id', 'group_id', 'discipline_id', 'updated_at', 'created_at'], 'integer'],
+            [['admin_id', 'curriculum_id', 'group_id', 'discipline_id', 'status', 'updated_at', 'created_at'], 'integer'],
             [['form_href'], 'string'],
+            [['curriculum_id', 'group_id', 'discipline_id'], 'required'],
             [['admin_id'], 'exist', 'skipOnError' => true, 'targetClass' => AuthAdmin::className(), 'targetAttribute' => ['admin_id' => 'id']],
             [['curriculum_id'], 'exist', 'skipOnError' => true, 'targetClass' => Curriculum::className(), 'targetAttribute' => ['curriculum_id' => 'id']],
             [['discipline_id'], 'exist', 'skipOnError' => true, 'targetClass' => Discipline::className(), 'targetAttribute' => ['discipline_id' => 'id']],
@@ -68,6 +73,7 @@ class Survey extends \yii\db\ActiveRecord
             'group_id' => 'Group ID',
             'discipline_id' => 'Discipline ID',
             'form_href' => 'Form Href',
+            'status' => 'Status',
             'updated_at' => 'Updated At',
             'created_at' => 'Created At',
         ];
@@ -111,5 +117,15 @@ class Survey extends \yii\db\ActiveRecord
     public function getGroup()
     {
         return $this->hasOne(Group::className(), ['id' => 'group_id']);
+    }
+
+    public static function checkIsset($curriculum_id, $group_id, $discipline_id)
+    {
+        if ($curriculum_id && $group_id && $discipline_id) {
+            if (self::findOne(['curriculum_id' => $curriculum_id, 'group_id' => $group_id, 'discipline_id' => $discipline_id])) {
+                return true;
+            }
+        }
+        return false;
     }
 }

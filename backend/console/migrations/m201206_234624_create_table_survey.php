@@ -1,6 +1,7 @@
 <?php
 
 use console\models\Migration;
+use backend\modules\v1\models\Survey;
 
 /**
  * Class m201206_234624_create_table_survey
@@ -16,6 +17,7 @@ class m201206_234624_create_table_survey extends Migration
             'group_id' => $this->integer(),
             'discipline_id' => $this->integer(),
             'form_href' => $this->text(),
+            'status' => $this->tinyInteger()->notNull()->defaultValue(Survey::STATUS_OPEN),
             'updated_at' => $this->integer(),
             'created_at' => $this->integer()
         ], $this->tableOptions);
