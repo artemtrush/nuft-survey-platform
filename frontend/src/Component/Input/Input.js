@@ -64,6 +64,8 @@ export default class Input extends Base {
         const $input = $('input', this.getElement());
 
         $input.val((value || '').trim());
+
+        $input.trigger('change');
     }
 
     showError(errorMessage) {

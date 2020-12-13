@@ -24,8 +24,20 @@ export default class CurriculumInput extends DropdownInput {
         }
     }
 
+    getPeriod() {
+        return this.params.period || null;
+    }
+
     getСurriculumId() {
         return this.getDropdownValue();
+    }
+
+    setСurriculumId(curriculumId) {
+        this.setDropdownValue(curriculumId);
+    }
+
+    getСurriculumName() {
+        return this.getValue();
     }
 
     async curriculumsLoader(search) {
@@ -58,7 +70,5 @@ export default class CurriculumInput extends DropdownInput {
         const $block = this.getElement();
 
         $block.addClass('CurriculumInput');
-
-        this.disable();
     }
 }

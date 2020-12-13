@@ -6,7 +6,8 @@ export default class Profile extends Base {
     async initUnits() {
         const { Button, Headline, Input, Caption } = this.components;
 
-        const teacher = await this.api.teachers.show(this.params.teacherId);
+        const response = await this.api.teachers.show(this.params.teacherId);
+        const teacher = response.teacher;
 
         this.units.headline = new Headline({ text : 'ПРОФІЛЬ КОРИСТУВАЧА' });
 

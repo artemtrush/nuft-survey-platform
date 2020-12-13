@@ -4,7 +4,8 @@ import Registration             from './Registration/Registration.js';
 
 import TeacherProfile           from './Teacher/Profile/Profile.js';
 import TeacherSurveys           from './Teacher/Surveys/Surveys.js';
-import TeacherSurveysCreation   from './Teacher/SurveysCreation/SurveysCreation.js';
+import TeacherSurveyCreation    from './Teacher/SurveyCreation/SurveyCreation.js';
+import TeacherSurveyView        from './Teacher/SurveyView/SurveyView.js';
 
 export default {
     Entrance,
@@ -13,5 +14,6 @@ export default {
 
     TeacherProfile,
     TeacherSurveys,
-    TeacherSurveysCreation
+    TeacherSurveyCreation,
+    TeacherSurveyView
 };

@@ -26,45 +26,58 @@ export default class DropdownInput extends Input {
 
         const $input = $('input', $block);
 
-        let stopDebounce = false;
-        const debounceTimeout = 300;
+        let timeoutId = null;
+        let lastRequestId = null;
+        let preventChangeEvent = false;
 
-        // eslint-disable-next-line func-style
-        const closingHandler = () => {
-            stopDebounce = true;
-            setTimeout(() => ( stopDebounce = false ), debounceTimeout + 100);
-        };
+        function clearRequests() {
+            clearTimeout(timeoutId);
 
-        $input.on('input change', this.utils.debounce(async () => {
-            if (stopDebounce) return;
+            const requestId = that.uuid();
+            lastRequestId = requestId;
 
-            $block.attr('dropdown-data-value', '');
+            return requestId;
+        }
 
-            const data = await this.params.dataLoader(this.getValue());
+        $input.on('keydown input change', () => {
+            if (preventChangeEvent) {
+                return;
+            }
 
-            if (stopDebounce) return;
+            const requestId = clearRequests();
 
-            this._renderDropdown(data);
-            this._openDropdown();
-        }, debounceTimeout));
+            const search = this.getValue();
+            this.setDropdownValue('');
 
-        $block.on('click', '.input-dropdown span', function () {
+            timeoutId = setTimeout(async () => {
+                const data = await this.params.dataLoader(search);
+
+                if (requestId !== lastRequestId || search !== this.getValue()) {
+                    return;
+                }
+
+                this._renderDropdown(data);
+                this._openDropdown();
+            }, 300);
+        });
+
+        $block.on('mousedown', '.input-dropdown span', function () {
             const $option = $(this);
 
+            clearRequests();
             that._closeDropdown();
-            closingHandler();
 
-            $block.attr('dropdown-data-value', $option.attr('data-value'));
+            preventChangeEvent = true;
 
+            that.setDropdownValue($option.attr('data-value'));
             that.setValue($option.text());
-            $input.trigger('change');
+
+            setTimeout(() => ( preventChangeEvent = false ), 100);
         });
 
         $input.on('blur', () => {
-            setTimeout(() => {
-                that._closeDropdown();
-                closingHandler();
-            }, 200);
+            clearRequests();
+            this._closeDropdown();
         });
     }
 
@@ -73,6 +86,11 @@ export default class DropdownInput extends Input {
         const value = $block.attr('dropdown-data-value');
 
         return value || null;
+    }
+
+    setDropdownValue(value) {
+        const $block = this.getElement();
+        $block.attr('dropdown-data-value', value || '');
     }
 
     _renderDropdown(options) {
@@ -85,6 +103,8 @@ export default class DropdownInput extends Input {
                 <span data-value="${option.value}">${option.text}</span>
             `);
         }
+
+        $('.input-dropdown', $block).remove();
 
         $block.append(`
             <div class="input-dropdown">

@@ -31,15 +31,3 @@ export function pathFor(routeName, params = {}) {
 
     return linkPath;
 }
-
-export function debounce(callback, timeout = 250) {
-    let timeoutId = null;
-
-    return function (...args) {
-        clearTimeout(timeoutId);
-
-        timeoutId = setTimeout(() => {
-            callback.apply(this, args);
-        }, timeout);
-    };
-}

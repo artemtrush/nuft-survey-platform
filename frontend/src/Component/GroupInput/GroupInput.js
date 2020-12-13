@@ -17,6 +17,29 @@ export default class GroupInput extends DropdownInput {
         this.params.curriculumId = curriculumId;
     }
 
+    setСurriculumName(curriculumName) {
+        this.params.curriculumName = curriculumName;
+
+        if (curriculumName) {
+            this.enable();
+        } else {
+            this.clear();
+            this.disable();
+        }
+    }
+
+    getGroupId() {
+        return this.getDropdownValue();
+    }
+
+    setGroupId(groupId) {
+        this.setDropdownValue(groupId);
+    }
+
+    getGroupName() {
+        return this.getValue();
+    }
+
     async groupsLoader(search) {
         if (!search || search.length < 3 || !this.params.curriculumId) {
             return [];
@@ -47,7 +70,5 @@ export default class GroupInput extends DropdownInput {
         const $block = this.getElement();
 
         $block.addClass('GroupInput');
-
-        // this.disable();
     }
 }

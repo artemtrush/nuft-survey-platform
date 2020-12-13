@@ -42,6 +42,11 @@ export default class ApiClient {
         });
     }
 
+    _accessDenied() {
+        Session.logout();
+        redirect('entrance');
+    }
+
     async request({ url, method, params = {}, body }) {
         const urlWithQuery = `${url}?${queryString.stringify(params)}`;
         const init = body instanceof FormData
@@ -53,25 +58,20 @@ export default class ApiClient {
 
             // Server error
             if (res.status >= 400) {
-                throw new Error('Bad response from server');
+                return this._accessDenied();
             }
 
             const data = await res.json();
 
             if (data.error && data.error.type && data.error.type === 'ACCESS_DENIED') {
-                Session.logout();
-                redirect('entrance');
+                return this._accessDenied();
             }
 
             return data;
         } catch (error) {
             console.error(error);
 
-            return {
-                Status: 0,
-                Message: error.message,
-                Error: {}
-            };
+            return this._accessDenied();
         }
     }
 
@@ -113,9 +113,5 @@ export default class ApiClient {
         }
 
         return init;
-    }
-
-    setAuthToken(authToken) {
-        this.authToken = authToken;
     }
 }

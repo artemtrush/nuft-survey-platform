@@ -17,6 +17,29 @@ export default class DisciplineInput extends DropdownInput {
         this.params.curriculumId = curriculumId;
     }
 
+    setСurriculumName(curriculumName) {
+        this.params.curriculumName = curriculumName;
+
+        if (curriculumName) {
+            this.enable();
+        } else {
+            this.clear();
+            this.disable();
+        }
+    }
+
+    getDisciplineId() {
+        return this.getDropdownValue();
+    }
+
+    setDisciplineId(disciplineId) {
+        this.setDropdownValue(disciplineId);
+    }
+
+    getDisciplineName() {
+        return this.getValue();
+    }
+
     async disciplinesLoader(search) {
         if (!search || search.length < 3 || !this.params.curriculumId) {
             return [];
@@ -47,7 +70,5 @@ export default class DisciplineInput extends DropdownInput {
         const $block = this.getElement();
 
         $block.addClass('DisciplineInput');
-
-        // this.disable();
     }
 }
