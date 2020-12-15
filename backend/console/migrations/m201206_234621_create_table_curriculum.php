@@ -13,8 +13,8 @@ class m201206_234621_create_table_curriculum extends Migration
             'id' => $this->primaryKey(),
             'name' => $this->string(),
             'period' => $this->string(),
-            'updated_at' => $this->integer(),
-            'created_at' => $this->integer()
+            'updatedAt' => $this->integer(),
+            'createdAt' => $this->integer()
         ], $this->tableOptions);
     }
 

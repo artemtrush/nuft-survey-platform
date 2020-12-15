@@ -43,6 +43,6 @@ class ApiHelper
             ->withClaim('uid', $uid)
             ->withClaim('role', $role)
             ->getToken(\Yii::$app->jwt->getSigner('HS256'), \Yii::$app->jwt->getKey());
-        return $token->__toString();
+        return 'Bearer ' . $token->__toString();
     }
 }

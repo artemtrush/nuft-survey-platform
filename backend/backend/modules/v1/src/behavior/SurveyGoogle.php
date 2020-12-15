@@ -24,7 +24,7 @@ class SurveyGoogle extends Behavior
             'discipline' => $this->owner->discipline ? $this->owner->discipline->name : ''
         ];
         $url = "https://script.google.com/macros/s/AKfycbyG-NWDX3stchmW4bitdItIKNo-P-uR-sVlQBNNasv1BYvyF8w9/exec?" . http_build_query($data);
-        $response = Json::decode(file_get_contents($url), false);
+        $response = Json::decode(file_get_contents($url));
 
         if (isset($response['published_url']) && isset($response['result_url'])) {
             $this->owner->linkForm = $response['published_url'];
