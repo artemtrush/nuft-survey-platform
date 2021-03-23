@@ -64,7 +64,7 @@ class CurriculumController extends Controller
                 }
             } else {
                 return ApiHelper::errorFields([
-                    'name' => 'Програма існує'
+                    'name' => ['Програма існує']
                 ]);
             }
         } catch (\Exception $exception) {

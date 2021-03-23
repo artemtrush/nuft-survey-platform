@@ -41,7 +41,8 @@ class ServiceController extends Controller
                 $role = ($admin->id == 1) ? 'admin' : 'teacher';
                 $token = ApiHelper::generateJWTToken($admin->id, $role);
                 return ApiHelper::successResponse([
-                    'token' => $token
+                    'token' => $token,
+                    'teacher' => $admin->teacherData()
                 ]);
             } else {
                 return ApiHelper::errorFields([
